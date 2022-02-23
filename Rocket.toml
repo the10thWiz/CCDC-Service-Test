@@ -1,0 +1,12 @@
+[default]
+address = "127.0.0.1"
+port = 8000
+
+[default.scanner]
+time = 5
+dev = "eth0"
+ip_pools = ["10.0.0.0/8"]
+ecom = { ip = "127.0.0.1", port = 80, path = "/", response = "" }
+splunk = { ip = "127.0.0.2", port = 80, path = "/", response = "" }
+ad_dns = { ip = "8.8.8.8", domain = "google.com", response = "1.1.1.1" }
+bind_dns = { ip = "9.9.9.9", domain = "google.com", response = "1.1.1.1" }
