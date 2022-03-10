@@ -9,7 +9,7 @@ use chrono::{DateTime, Utc};
 use rocket::{
     get, launch, routes,
     serde::{json::Json, Deserialize, Serialize},
-    State,
+    State, fs::{FileServer, Options},
 };
 
 mod ip_pool;
@@ -60,7 +60,7 @@ pub struct ServiceStatus {
 }
 
 #[get("/status")]
-fn hello(status: &State<Arc<Mutex<ServiceStatus>>>) -> Json<ServiceStatus> {
+fn status(status: &State<Arc<Mutex<ServiceStatus>>>) -> Json<ServiceStatus> {
     Json(status.lock().unwrap().clone())
 }
 
@@ -85,7 +85,10 @@ fn rocket() -> _ {
         .extract_inner("scanner")
         .expect("Failed to read config");
     rocket::tokio::spawn(create_scanner(Arc::clone(&status), config));
-    rocket.manage(status).mount("/", routes![hello])
+    rocket
+        .manage(status)
+        .mount("/api", routes![status])
+        .mount("/", FileServer::new("static", Options::Index))
 }
 
 fn create_scanner(
@@ -94,6 +97,7 @@ fn create_scanner(
 ) -> impl Future<Output = ()> + 'static {
     println!("Create Scanner");
     async move {
+        return;
         let mut interval = rocket::tokio::time::interval(Duration::from_secs(config.time as u64));
         let mut iter = config.ip_pools.iter().cycle();
         loop {
