@@ -7,7 +7,7 @@
 (function(){
   'use strict';
   
-  $.getJSON('/api/status').then((res) => {
+  window.setInterval(() => $.getJSON('/api/status').then((res) => {
     console.log(res);
     let service = '<td>Serivce</td>';
     let stat = '<td>Status</td>';
@@ -21,5 +21,5 @@
     }
     $('#status_row').html(stat);
     $('#service_row').html(service);
-  });
+  }), 1000);
 })();
